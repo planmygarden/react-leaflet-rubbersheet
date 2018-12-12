@@ -1,14 +1,14 @@
-import React from 'react'
-import PropTypes from 'prop-types';
-import { Map, TileLayer } from 'react-leaflet'
-import L from 'leaflet'
+import React from 'react';
+import { Map, TileLayer } from 'react-leaflet';
+import L from 'leaflet';
 import Slider from 'react-rangeslider';
 import ReactLeafletRubbersheet from 'react-leaflet-rubbersheet';
 
 import 'leaflet/dist/leaflet.css';
-import 'react-rangeslider/lib/index.css'
-import './index.css'
-import Logo from './logo.png'
+import 'react-rangeslider/lib/index.css';
+import './index.css';
+import Image from './image.jpg';
+import Logo from './logo.png';
 
 export default class App extends React.Component {
   state = { opacity: 0.75, mode: 'rotate' }
@@ -37,7 +37,7 @@ export default class App extends React.Component {
       <div className="map">
 
         <div className="center logo-container">
-          <img className="logo" src={Logo}></img>
+          <img className="logo" src={Logo} alt='Plan My Garden Logo'></img>
           <p>How well can you place this drone image on the map?<br></br>  Use the rotate, scale and distort tools to find out.</p>
         </div>
 
@@ -54,10 +54,10 @@ export default class App extends React.Component {
             onChange={this.handleOpacityChange.bind(this)}
           />
           </div>
-
         </div>
 
         <Map
+          style={{ width: '100%', height: '800px' }}
           bounds={[[43.788434, 15.644610,0],[43.775297, 15.660593,0]]}
         >
           <TileLayer
@@ -66,7 +66,7 @@ export default class App extends React.Component {
             url="https://mt0.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"/>
 
           <ReactLeafletRubbersheet
-            url="https://i.imgur.com/jaRqxHa.jpg"
+            url={Image}
             onUpdate={this.onUpdate.bind(this)}
             opacity={this.state.opacity}
             mode={this.state.mode}

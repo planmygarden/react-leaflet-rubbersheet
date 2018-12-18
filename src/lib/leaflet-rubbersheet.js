@@ -1,11 +1,11 @@
 import L from 'leaflet';
 import MatrixUtil from './matrix-util';
 import { DistortHandle, RotateHandle } from './handles';
+
 const LeafletRubbersheet = L.ImageOverlay.extend({
   options: {
     opacity: 1,
     alt: '',
-    interactive: false,
     crossOrigin: false,
     errorOverlayUrl: '',
     height: 200,
@@ -18,6 +18,7 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
     this._url = url;
     this._corners = corners;
     this._mode = mode;
+    this._interactive = true;
     L.Util.setOptions(this, options);
   },
 
@@ -30,7 +31,7 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
       }
     }
 
-    if (this.options.interactive) {
+    if (this._interactive) {
       L.DomUtil.addClass(this._image, 'leaflet-interactive');
       this.addInteractiveTarget(this._image);
     }
@@ -43,7 +44,7 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
   onRemove: function () {
     L.DomUtil.remove(this._image);
 
-    if (this.options.interactive) { this.removeInteractiveTarget(this._image); }
+    if (this._interactive) { this.removeInteractiveTarget(this._image); }
 
     this._map.removeLayer(this._handles);
   },
@@ -233,6 +234,34 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
     return Math.pow(dx, 2) + Math.pow(dy, 2);
   },
 
+  _enableDragging: function() {
+    if (!this._draggable) {
+      const Draggable = L.Draggable.extend({
+        _updatePosition: function() {
+          this.fire('predrag');
+          this._leaflet_pos = this._newPos;
+          this.fire('drag');
+        }
+      });
+
+      this._draggable = new Draggable(this._image);
+      this._draggable.on('drag', (e) => {
+        const map = this._map;
+        const corners = this._corners;
+        const delta = e.sourceTarget._newPos.subtract(map.latLngToLayerPoint(corners[0]));
+        for (let i = 0; i < 4; i++) {
+          let currentPoint = map.latLngToLayerPoint(corners[i]);
+          corners[i] = map.layerPointToLatLng(currentPoint.add(delta));
+        }
+        this._reset();
+        this._handles.eachLayer(function(handle) {
+          handle.setLatLng(corners[handle._corner]);
+        })
+      }, this)
+      this._draggable.enable();
+    }
+  },
+
   _enableMode: function() {
     const handles = new L.LayerGroup();
     const HandleType = this._mode === 'distort' ? DistortHandle : RotateHandle;
@@ -317,6 +346,7 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
     }
     this._reset();
     this._enableMode();
+    this._enableDragging();
 
     this.fire('load');
   },
@@ -329,6 +359,9 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
     const topLeft = latLngToLayerPoint(this._corners[0]);
     const warp = MatrixUtil.getMatrixString(transformMatrix);
     const translation = this._getTranslateString(topLeft);
+
+    // Required for Draggable to work
+    this._image._leaflet_pos = topLeft;
 
     this._image.style[L.DomUtil.TRANSFORM] = [translation, warp].join(' ');
     /* Set origin to the upper-left corner rather than the center of the image, which is the default. */

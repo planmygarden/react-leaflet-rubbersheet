@@ -400,7 +400,6 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
     } else if(mode === 'rotate') {
       const corner = corners[cornerIndex];
       const angle = this._calculateAngle(corner, latLng);
-      const scaleFactor = this._calculateScalingFactor(corner, latLng);
       this._rotate(angle);
     } else if(mode === 'scale') {
       const corner = corners[cornerIndex];

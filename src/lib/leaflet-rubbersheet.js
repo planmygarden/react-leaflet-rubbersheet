@@ -1,6 +1,6 @@
 import L from 'leaflet';
 import MatrixUtil from './matrix-util';
-import Handle from './handles';
+import Handle from './handle';
 
 const LeafletRubbersheet = L.ImageOverlay.extend({
   options: {

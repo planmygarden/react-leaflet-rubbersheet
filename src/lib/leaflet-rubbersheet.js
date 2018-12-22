@@ -1,6 +1,6 @@
 import L from 'leaflet';
 import MatrixUtil from './matrix-util';
-import { DistortHandle, RotateHandle } from './handles';
+import Handle from './handles';
 
 const LeafletRubbersheet = L.ImageOverlay.extend({
   options: {
@@ -264,12 +264,9 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
 
   _enableMode: function() {
     const handles = new L.LayerGroup();
-    const HandleType = this._mode === 'distort' ? DistortHandle : RotateHandle;
-
     for (let i = 0; i < 4; i++) {
-      handles.addLayer(new HandleType(this._corners[i], i, L.Util.bind(this._update, this)));
+      handles.addLayer(new Handle(this._corners[i], i, L.Util.bind(this._update, this)));
     }
-
     this._handles = handles;
     this._map.addLayer(this._handles);
   },
@@ -368,20 +365,25 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
     this._image.style[L.DomUtil.TRANSFORM + '-origin'] = "0 0 0";
   },
 
-  _rotateAndScale: function(angle, scaleFactor) {
+  _rotate: function(angle) {
     const map = this._map;
     const center = map.latLngToLayerPoint(this.getCenter());
 
     for (let i = 0; i < 4; i++) {
-      // Rotate
       const p = map.latLngToLayerPoint(this._corners[i]).subtract(center);
       const q = new L.Point(
         Math.cos(angle)*p.x - Math.sin(angle)*p.y,
         Math.sin(angle)*p.x + Math.cos(angle)*p.y
       );
       this._corners[i] = map.layerPointToLatLng(q.add(center));
+    }
+  },
 
-      // Scale
+  _scale: function(scaleFactor) {
+    const map = this._map;
+    const center = map.latLngToLayerPoint(this.getCenter());
+
+    for (let i = 0; i < 4; i++) {
       const r = map.latLngToLayerPoint(this._corners[i])
         .subtract(center)
         .multiplyBy(scaleFactor)
@@ -399,11 +401,15 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
       const corner = corners[cornerIndex];
       const angle = this._calculateAngle(corner, latLng);
       const scaleFactor = this._calculateScalingFactor(corner, latLng);
-      this._rotateAndScale(angle, scaleFactor);
+      this._rotate(angle);
+    } else if(mode === 'scale') {
+      const corner = corners[cornerIndex];
+      const scaleFactor = this._calculateScalingFactor(corner, latLng);
+      this._scale(scaleFactor);
     }
     handles.eachLayer(function(handle) {
       const currentCornerIndex = handle._corner;
-      if (cornerIndex === currentCornerIndex) { return; }
+      // if (cornerIndex === currentCornerIndex) { return; }
       handle.setLatLng(corners[handle._corner]);
     })
     this._reset();

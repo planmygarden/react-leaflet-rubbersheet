@@ -13,12 +13,16 @@ import Logo from './logo.png';
 export default class App extends React.Component {
   state = { opacity: 0.75, mode: 'rotate' }
 
+  clickDistort() {
+    this.setState({ mode: 'distort' });
+  }
+
   clickRotate() {
     this.setState({ mode: 'rotate' });
   }
 
-  clickDistort() {
-    this.setState({ mode: 'distort' });
+  clickScale() {
+    this.setState({ mode: 'scale' });
   }
 
   onUpdate(corners) {
@@ -35,15 +39,15 @@ export default class App extends React.Component {
 
     return (
       <div className="map">
-
         <div className="center logo-container">
           <img className="logo" src={Logo} alt='Plan My Garden Logo'></img>
           <p>How well can you place this drone image on the map?<br></br>  Use the rotate, scale and distort tools to find out.</p>
         </div>
 
         <div className="center tool-container">
-          <button className={this.state.mode === 'rotate' ? 'btn enabled' : 'btn' } href="#" onClick={this.clickRotate.bind(this)}><i className="fa fa-refresh"></i><span className="tool-text">Rotate</span></button>
-          <button className={this.state.mode === 'distort' ? 'btn enabled' : 'btn' } href="#" onClick={this.clickDistort.bind(this)}><i className="fa fa-object-group"></i><span className="tool-text">Distort</span></button>
+          <button className={this.state.mode === 'rotate' ? 'btn enabled' : 'btn' } href="#" onClick={this.clickRotate.bind(this)}><span className="tool-text">Rotate</span></button>
+          <button className={this.state.mode === 'scale' ? 'btn enabled' : 'btn' } href="#" onClick={this.clickScale.bind(this)}><span className="tool-text">Scale</span></button>
+          <button className={this.state.mode === 'distort' ? 'btn enabled' : 'btn' } href="#" onClick={this.clickDistort.bind(this)}><span className="tool-text">Distort</span></button>
 
           <div className="opacity-container">
           <h4>Opacity:</h4>

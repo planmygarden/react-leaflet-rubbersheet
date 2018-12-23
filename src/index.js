@@ -8,7 +8,7 @@ class ReactLeafletRubbersheet extends MapLayer {
   static propTypes = {
     url: PropTypes.string,
     corners: PropTypes.arrayOf(PropTypes.object),
-    mode: PropTypes.oneOf(['rotate', 'distort']),
+    mode: PropTypes.oneOf(['distort', 'rotate', 'scale']),
     opacity: PropTypes.number,
     onUpdate: PropTypes.func
   }

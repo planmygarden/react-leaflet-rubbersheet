@@ -10,7 +10,7 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
     errorOverlayUrl: '',
     height: 200,
     zIndex: 1,
-    className: '',
+    className: ''
   },
 
   initialize: function (url, corners, mode, options) {
@@ -54,16 +54,16 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
    *     See http://stackoverflow.com/questions/6149175/logical-question-given-corners-find-center-of-quadrilateral
    */
   getCenter: function(ll2c, c2ll) {
-    var map = this._map,
-      latLngToCartesian = ll2c ? ll2c : map.latLngToLayerPoint,
-      cartesianToLatLng = c2ll ? c2ll: map.layerPointToLatLng,
-      nw = latLngToCartesian.call(map, this._corners[0]),
-      ne = latLngToCartesian.call(map, this._corners[1]),
-      se = latLngToCartesian.call(map, this._corners[2]),
-      sw = latLngToCartesian.call(map, this._corners[3]),
+    const map = this._map;
+    const latLngToCartesian = ll2c || map.latLngToLayerPoint;
+    const cartesianToLatLng = c2ll || map.layerPointToLatLng;
+    const nw = latLngToCartesian.call(map, this._corners[0]);
+    const ne = latLngToCartesian.call(map, this._corners[1]);
+    const se = latLngToCartesian.call(map, this._corners[2]);
+    const sw = latLngToCartesian.call(map, this._corners[3]);
 
-      nmid = nw.add(ne.subtract(nw).divideBy(2)),
-      smid = sw.add(se.subtract(sw).divideBy(2));
+    const nmid = nw.add(ne.subtract(nw).divideBy(2));
+    const smid = sw.add(se.subtract(sw).divideBy(2));
 
     return cartesianToLatLng.call(map, nmid.add(smid.subtract(nmid).divideBy(2)));
   },
@@ -90,7 +90,7 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
   },
 
   setCorners: function (corners) {
-    this._corners = corners
+    this._corners = corners;
 
     if (this._map) {
       this._reset();
@@ -166,28 +166,26 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
   },
 
   _calculateAngle: function(latlngA, latlngB) {
-    var map = this._map,
+    const map = this._map;
 
-      centerPoint = map.latLngToLayerPoint(this.getCenter()),
-      formerPoint = map.latLngToLayerPoint(latlngA),
-      newPoint = map.latLngToLayerPoint(latlngB),
-
-      initialAngle = Math.atan2(centerPoint.y - formerPoint.y, centerPoint.x - formerPoint.x),
-      newAngle = Math.atan2(centerPoint.y - newPoint.y, centerPoint.x - newPoint.x);
+    const centerPoint = map.latLngToLayerPoint(this.getCenter());
+    const formerPoint = map.latLngToLayerPoint(latlngA);
+    const newPoint = map.latLngToLayerPoint(latlngB);
+    const initialAngle = Math.atan2(centerPoint.y - formerPoint.y, centerPoint.x - formerPoint.x);
+    const newAngle = Math.atan2(centerPoint.y - newPoint.y, centerPoint.x - newPoint.x);
 
     return newAngle - initialAngle;
   },
 
   /* Takes two latlngs and calculates the scaling difference. */
   _calculateScalingFactor: function(latlngA, latlngB) {
-    var map = this._map,
+    const map = this._map;
 
-      centerPoint = map.latLngToLayerPoint(this.getCenter()),
-      formerPoint = map.latLngToLayerPoint(latlngA),
-      newPoint = map.latLngToLayerPoint(latlngB),
-
-      formerRadiusSquared = this._d2(centerPoint, formerPoint),
-      newRadiusSquared = this._d2(centerPoint, newPoint);
+    const centerPoint = map.latLngToLayerPoint(this.getCenter());
+    const formerPoint = map.latLngToLayerPoint(latlngA);
+    const newPoint = map.latLngToLayerPoint(latlngB);
+    const formerRadiusSquared = this._d2(centerPoint, formerPoint);
+    const newRadiusSquared = this._d2(centerPoint, newPoint);
 
     return Math.sqrt(newRadiusSquared / formerRadiusSquared);
   },
@@ -196,13 +194,13 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
     /* Setting reasonable but made-up image defaults
      * allow us to place images on the map before
      * they've finished downloading. */
-    var offset = latLngToCartesian(this._corners[0]),
-      w = this._image.offsetWidth || 500,
-      h = this._image.offsetHeight || 375,
-      c = [],
-      j;
+    const offset = latLngToCartesian(this._corners[0]);
+    const w = this._image.offsetWidth || 500;
+    const h = this._image.offsetHeight || 375;
+    const c = [];
+
     /* Convert corners to container points (i.e. cartesian coordinates). */
-    for (j = 0; j < this._corners.length; j++) {
+    for (let j = 0; j < this._corners.length; j++) {
       c.push(latLngToCartesian(this._corners[j])._subtract(offset));
     }
 
@@ -224,8 +222,8 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
 
   /* Distance between two points in cartesian space, squared (distance formula). */
   _d2: function(a, b) {
-    var dx = a.x - b.x,
-      dy = a.y - b.y;
+    const dx = a.x - b.x;
+    const dy = a.y - b.y;
 
     return Math.pow(dx, 2) + Math.pow(dy, 2);
   },
@@ -271,9 +269,9 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
     // makes animation smoother as it ensures HW accel is used. Firefox 13 doesn't care
     // (same speed either way), Opera 12 doesn't support translate3d
 
-    var is3d = L.Browser.webkit3d,
-        open = 'translate' + (is3d ? '3d' : '') + '(',
-        close = (is3d ? ',0' : '') + ')';
+    const is3d = L.Browser.webkit3d;
+    const open = 'translate' + (is3d ? '3d' : '') + '(';
+    const close = (is3d ? ',0' : '') + ')';
 
     return open + point.x + 'px,' + point.y + 'px' + close;
   },
@@ -326,13 +324,13 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
       const originalImageHeight = L.DomUtil.getStyle(this._image, 'height');
       const aspectRatio = parseInt(originalImageWidth) / parseInt(originalImageHeight);
       const imageHeight = this.options.height;
-      const imageWidth = parseInt(aspectRatio*imageHeight);
+      const imageWidth = parseInt(aspectRatio * imageHeight);
       const center = this._map.latLngToContainerPoint(this._map.getCenter());
       const offset = new L.Point(imageWidth, imageHeight).divideBy(2);
       this._corners = [
         this._map.containerPointToLatLng(center.subtract(offset)),
-        this._map.containerPointToLatLng(center.add(new L.Point(offset.x, - offset.y))),
-        this._map.containerPointToLatLng(center.add(new L.Point(- offset.x, offset.y))),
+        this._map.containerPointToLatLng(center.add(new L.Point(offset.x, -offset.y))),
+        this._map.containerPointToLatLng(center.add(new L.Point(-offset.x, offset.y))),
         this._map.containerPointToLatLng(center.add(offset))
       ];
     }
@@ -344,7 +342,7 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
   },
 
   _reset: function () {
-    if(!this._loaded) { return; }
+    if (!this._loaded) { return; }
 
     const latLngToLayerPoint = L.bind(this._map.latLngToLayerPoint, this._map);
     const transformMatrix = this._calculateProjectiveTransform(latLngToLayerPoint);
@@ -357,7 +355,7 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
 
     this._image.style[L.DomUtil.TRANSFORM] = [translation, warp].join(' ');
     /* Set origin to the upper-left corner rather than the center of the image, which is the default. */
-    this._image.style[L.DomUtil.TRANSFORM + '-origin'] = "0 0 0";
+    this._image.style[L.DomUtil.TRANSFORM + '-origin'] = '0 0 0';
   },
 
   _rotate: function(angle) {
@@ -367,8 +365,8 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
     for (let i = 0; i < 4; i++) {
       const p = map.latLngToLayerPoint(this._corners[i]).subtract(center);
       const q = new L.Point(
-        Math.cos(angle)*p.x - Math.sin(angle)*p.y,
-        Math.sin(angle)*p.x + Math.cos(angle)*p.y
+        Math.cos(angle) * p.x - Math.sin(angle) * p.y,
+        Math.sin(angle) * p.x + Math.cos(angle) * p.y
       );
       this._corners[i] = map.layerPointToLatLng(q.add(center));
     }
@@ -390,22 +388,20 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
   _update: function(cornerIndex, latLng) {
     const { _corners: corners, _handles: handles, _mode: mode } = this;
 
-    if(mode === 'distort') {
+    if (mode === 'distort') {
       corners[cornerIndex] = latLng;
-    } else if(mode === 'rotate') {
+    } else if (mode === 'rotate') {
       const corner = corners[cornerIndex];
       const angle = this._calculateAngle(corner, latLng);
       this._rotate(angle);
-    } else if(mode === 'scale') {
+    } else if (mode === 'scale') {
       const corner = corners[cornerIndex];
       const scaleFactor = this._calculateScalingFactor(corner, latLng);
       this._scale(scaleFactor);
     }
     handles.eachLayer(function(handle) {
-      const currentCornerIndex = handle._corner;
-      // if (cornerIndex === currentCornerIndex) { return; }
       handle.setLatLng(corners[handle._corner]);
-    })
+    });
     this._reset();
     this.fire('edit');
   },

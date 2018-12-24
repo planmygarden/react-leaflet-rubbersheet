@@ -28,8 +28,8 @@
     "test:watch": "react-scripts test --env=jsdom",
     "build": "rollup -c",
     "start": "rollup -c -w",
-    "prepare": "npm run build",
-    "predeploy": "cd example && npm install && npm run build",
+    "prepare": "yarn build",
+    "predeploy": "cd example && yarn install && yarn build",
     "deploy": "gh-pages -d example/build"
   },
   "peerDependencies": {

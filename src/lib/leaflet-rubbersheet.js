@@ -13,11 +13,12 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
     className: ''
   },
 
-  initialize: function (url, corners, mode, options) {
+  initialize: function (url, corners, mode, locked, options) {
     this._loaded = false;
     this._url = url;
     this._corners = corners;
     this._mode = mode;
+    this._locked = locked;
     this._interactive = true;
     L.Util.setOptions(this, options);
   },
@@ -96,6 +97,17 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
       this._reset();
     }
     return this;
+  },
+
+  setLocked: function(locked) {
+    this._locked = locked;
+    if (locked) {
+      this._map.removeLayer(this._handles);
+      this._draggable.disable();
+    } else {
+      this._map.addLayer(this._handles);
+      this._draggable.enable();
+    }
   },
 
   setMode: function(mode) {
@@ -252,7 +264,10 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
         handle.setLatLng(corners[handle._corner]);
       });
     }, this);
-    this._draggable.enable();
+
+    if (!this._locked) {
+      this._draggable.enable();
+    }
   },
 
   _enableHandles: function() {
@@ -261,7 +276,10 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
     for (let i = 0; i < 4; i++) {
       this._handles.addLayer(new Handle(this._corners[i], i, L.Util.bind(this._update, this)));
     }
-    this._map.addLayer(this._handles);
+
+    if (!this._locked) {
+      this._map.addLayer(this._handles);
+    }
   },
 
   _getTranslateString: function (point) {

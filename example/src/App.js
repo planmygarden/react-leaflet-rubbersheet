@@ -1,6 +1,5 @@
 import React from 'react';
 import { Map, TileLayer } from 'react-leaflet';
-import L from 'leaflet';
 import Slider from 'react-rangeslider';
 import ReactLeafletRubbersheet from 'react-leaflet-rubbersheet';
 
@@ -11,10 +10,16 @@ import Image from './image.jpg';
 import Logo from './logo.png';
 
 export default class App extends React.Component {
-  state = { opacity: 0.75, mode: 'rotate' }
+  state = { opacity: 0.75, mode: 'rotate', locked: false }
 
   clickDistort() {
     this.setState({ mode: 'distort' });
+  }
+
+  clickLock() {
+    this.setState(prevState => ({
+      locked: !prevState.locked
+    }));
   }
 
   clickRotate() {
@@ -36,6 +41,7 @@ export default class App extends React.Component {
   };
 
   render() {
+    const { locked, mode, opacity } = this.state;
 
     return (
       <div className="map">
@@ -45,16 +51,17 @@ export default class App extends React.Component {
         </div>
 
         <div className="center tool-container">
-          <button className={this.state.mode === 'rotate' ? 'btn enabled' : 'btn' } href="#" onClick={this.clickRotate.bind(this)}><span className="tool-text">Rotate</span></button>
-          <button className={this.state.mode === 'scale' ? 'btn enabled' : 'btn' } href="#" onClick={this.clickScale.bind(this)}><span className="tool-text">Scale</span></button>
-          <button className={this.state.mode === 'distort' ? 'btn enabled' : 'btn' } href="#" onClick={this.clickDistort.bind(this)}><span className="tool-text">Distort</span></button>
+          <button className={locked ? 'btn' : 'btn enabled' } href="#" onClick={this.clickLock.bind(this)}><span className="tool-text">{locked ? 'Enable' : 'Disable'}</span></button>
+          <button className={mode === 'rotate' ? 'btn enabled' : 'btn' } href="#" onClick={this.clickRotate.bind(this)}><span className="tool-text">Rotate</span></button>
+          <button className={mode === 'scale' ? 'btn enabled' : 'btn' } href="#" onClick={this.clickScale.bind(this)}><span className="tool-text">Scale</span></button>
+          <button className={mode === 'distort' ? 'btn enabled' : 'btn' } href="#" onClick={this.clickDistort.bind(this)}><span className="tool-text">Distort</span></button>
 
           <div className="opacity-container">
           <h4>Opacity:</h4>
           <Slider
             min={0}
             max={100}
-            value={this.state.opacity * 100.0}
+            value={opacity * 100.0}
             onChange={this.handleOpacityChange.bind(this)}
           />
           </div>
@@ -72,14 +79,9 @@ export default class App extends React.Component {
           <ReactLeafletRubbersheet
             url={Image}
             onUpdate={this.onUpdate.bind(this)}
-            opacity={this.state.opacity}
-            mode={this.state.mode}
-            corners={true && [
-              new L.latLng(43.78710550492949,15.647438805314396),
-              new L.latLng(43.78710550492949,15.655914504316957),
-              new L.latLng(43.78098644922989,15.647438805314396),
-              new L.latLng(43.78098644922989,15.655914504316957)
-            ]} />
+            opacity={opacity}
+            mode={mode}
+            locked={locked} />
         </Map>
       </div>
     )

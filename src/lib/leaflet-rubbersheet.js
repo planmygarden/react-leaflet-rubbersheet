@@ -100,11 +100,7 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
 
   setMode: function(mode) {
     this._mode = mode;
-
-    if(!this._loaded) { return; }
-
-    this._map.removeLayer(this._handles);
-    this._enableMode();
+    return this;
   },
 
   setOpacity: function (opacity) {
@@ -153,7 +149,7 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
   },
 
   _animateZoom: function (e) {
-    if(!this._loaded) { return; }
+    if (!this._loaded) { return; }
 
     const map = this._map;
     const latLngToNewLayerPoint = function(latlng) {
@@ -235,39 +231,38 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
   },
 
   _enableDragging: function() {
-    if (!this._draggable) {
-      const Draggable = L.Draggable.extend({
-        _updatePosition: function() {
-          this.fire('predrag');
-          this._leaflet_pos = this._newPos;
-          this.fire('drag');
-        }
-      });
+    if (this._draggable) { return; }
+    const Draggable = L.Draggable.extend({
+      _updatePosition: function() {
+        this.fire('predrag');
+        this._leaflet_pos = this._newPos;
+        this.fire('drag');
+      }
+    });
 
-      this._draggable = new Draggable(this._image);
-      this._draggable.on('drag', (e) => {
-        const map = this._map;
-        const corners = this._corners;
-        const delta = e.sourceTarget._newPos.subtract(map.latLngToLayerPoint(corners[0]));
-        for (let i = 0; i < 4; i++) {
-          let currentPoint = map.latLngToLayerPoint(corners[i]);
-          corners[i] = map.layerPointToLatLng(currentPoint.add(delta));
-        }
-        this._reset();
-        this._handles.eachLayer(function(handle) {
-          handle.setLatLng(corners[handle._corner]);
-        })
-      }, this)
-      this._draggable.enable();
-    }
+    this._draggable = new Draggable(this._image);
+    this._draggable.on('drag', (e) => {
+      const map = this._map;
+      const corners = this._corners;
+      const delta = e.sourceTarget._newPos.subtract(map.latLngToLayerPoint(corners[0]));
+      for (let i = 0; i < 4; i++) {
+        let currentPoint = map.latLngToLayerPoint(corners[i]);
+        corners[i] = map.layerPointToLatLng(currentPoint.add(delta));
+      }
+      this._reset();
+      this._handles.eachLayer(function(handle) {
+        handle.setLatLng(corners[handle._corner]);
+      });
+    }, this);
+    this._draggable.enable();
   },
 
-  _enableMode: function() {
-    const handles = new L.LayerGroup();
+  _enableHandles: function() {
+    if (this._handles) { return; }
+    this._handles = new L.LayerGroup();
     for (let i = 0; i < 4; i++) {
-      handles.addLayer(new Handle(this._corners[i], i, L.Util.bind(this._update, this)));
+      this._handles.addLayer(new Handle(this._corners[i], i, L.Util.bind(this._update, this)));
     }
-    this._handles = handles;
     this._map.addLayer(this._handles);
   },
 
@@ -342,7 +337,7 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
       ];
     }
     this._reset();
-    this._enableMode();
+    this._enableHandles();
     this._enableDragging();
 
     this.fire('load');

@@ -1,6 +1,5 @@
 import { MapLayer, withLeaflet } from 'react-leaflet';
 import PropTypes from 'prop-types';
-import L from 'leaflet';
 
 import LeafletRubbersheet from './lib/leaflet-rubbersheet';
 
@@ -18,7 +17,7 @@ class ReactLeafletRubbersheet extends MapLayer {
     if (!this.leafletRubbersheet) {
       this.leafletRubbersheet = new LeafletRubbersheet(url, corners, mode, this.getOptions(remaining));
       this.leafletRubbersheet.on('edit', function(e) {
-        onUpdate(this.getCorners())
+        onUpdate(this.getCorners());
       });
     }
 
@@ -26,11 +25,12 @@ class ReactLeafletRubbersheet extends MapLayer {
   }
 
   updateLeafletElement(fromProps, toProps) {
-    const { mode, opacity } = fromProps;
-    const { mode: newMode, opacity: newOpacity } = toProps;
+    const { mode, opacity, url } = fromProps;
+    const { mode: newMode, opacity: newOpacity, url: newUrl } = toProps;
 
     if (mode !== newMode) { this.leafletRubbersheet.setMode(newMode); }
     if (opacity !== newOpacity) { this.leafletRubbersheet.setOpacity(newOpacity); }
+    if (url !== newUrl) { this.leafletRubbersheet.setUrl(newUrl); }
   }
 }
 

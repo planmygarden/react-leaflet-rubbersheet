@@ -260,6 +260,7 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
         corners[i] = map.layerPointToLatLng(currentPoint.add(delta));
       }
       this._reset();
+      this.fire('edit');
       this._handles.eachLayer(function(handle) {
         handle.setLatLng(corners[handle._corner]);
       });

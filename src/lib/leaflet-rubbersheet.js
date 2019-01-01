@@ -60,8 +60,8 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
     const cartesianToLatLng = c2ll || map.layerPointToLatLng;
     const nw = latLngToCartesian.call(map, this._corners[0]);
     const ne = latLngToCartesian.call(map, this._corners[1]);
-    const se = latLngToCartesian.call(map, this._corners[2]);
-    const sw = latLngToCartesian.call(map, this._corners[3]);
+    const sw = latLngToCartesian.call(map, this._corners[2]);
+    const se = latLngToCartesian.call(map, this._corners[3]);
 
     const nmid = nw.add(ne.subtract(nw).divideBy(2));
     const smid = sw.add(se.subtract(sw).divideBy(2));
@@ -227,8 +227,8 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
     return MatrixUtil.general2DProjection(
       0, 0, c[0].x, c[0].y,
       w, 0, c[1].x, c[1].y,
-      0, h, c[2].x, c[2].y,
-      w, h, c[3].x, c[3].y
+      w, h, c[2].x, c[2].y,
+      0, h, c[3].x, c[3].y
     );
   },
 
@@ -348,8 +348,8 @@ const LeafletRubbersheet = L.ImageOverlay.extend({
       this._corners = [
         this._map.containerPointToLatLng(center.subtract(offset)),
         this._map.containerPointToLatLng(center.add(new L.Point(offset.x, -offset.y))),
-        this._map.containerPointToLatLng(center.add(new L.Point(-offset.x, offset.y))),
-        this._map.containerPointToLatLng(center.add(offset))
+        this._map.containerPointToLatLng(center.add(offset)),
+        this._map.containerPointToLatLng(center.add(new L.Point(-offset.x, offset.y)))
       ];
     }
     this._reset();

@@ -32,7 +32,7 @@ class ReactLeafletRubbersheet extends MapLayer {
     if (locked !== newLocked) { this.leafletRubbersheet.setLocked(newLocked); }
     if (mode !== newMode) { this.leafletRubbersheet.setMode(newMode); }
     if (opacity !== newOpacity) { this.leafletRubbersheet.setOpacity(newOpacity); }
-    if (url !== newUrl) { this.leafletRubbersheet.setUrl(); }
+    if (url !== newUrl) { this.leafletRubbersheet.setUrl(newUrl); }
   }
 }
 

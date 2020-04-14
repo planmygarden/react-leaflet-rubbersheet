@@ -4,7 +4,7 @@
 
 A react-leaflet ImageOverlay that supports stretching, skewing, distorting, rotating, translating and transparency. It is designed to allow positioning and rectification of aerial, drone and UAV imagery on a react-leaflet map.
 
-It was built for the [Plan My Garden](https://github.com/SoarEarth) platform
+It was built for the [Plan My Garden](https://github.com/planmygarden) platform
 and borrows extensively from both the [Leaflet.DistortableImage](https://github.com/publiclab/Leaflet.DistortableImage) and [react-leaflet-distortable-imageoverlay](https://github.com/ChrisLowe-Takor/react-leaflet-distortable-imageoverlay) projects
 
 [Live Demo](https://planmygarden.github.io/react-leaflet-rubbersheet/)
@@ -17,7 +17,7 @@ npm install --save react-leaflet-rubbersheet
 
 ## Usage
 
-The `ReactLeafletRubbersheet` component takes the corners of the ImageOverlay and updates the parent on changes via the `onUpdate` handler.  The `mode` can be one of: 'rotate' and 'distort'.
+The `ReactLeafletRubbersheet` component takes the corners of the ImageOverlay and updates the parent on changes via the `onUpdate` handler.  The `mode` can be one of: `rotate` or `distort`.
 
 ```jsx
 import React, { Component } from 'react'

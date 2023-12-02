@@ -54,4 +54,4 @@ class Example extends Component {
 
 ## License
 
-MIT © [Plan My Garden](https://github.com/planmygarden)
+MIT

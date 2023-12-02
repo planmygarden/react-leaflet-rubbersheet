@@ -4,10 +4,8 @@
 
 A react-leaflet ImageOverlay that supports stretching, skewing, distorting, rotating, translating and transparency. It is designed to allow positioning and rectification of aerial, drone and UAV imagery on a react-leaflet map.
 
-It was built for the [Plan My Garden](https://github.com/planmygarden) platform
-and borrows extensively from both the [Leaflet.DistortableImage](https://github.com/publiclab/Leaflet.DistortableImage) and [react-leaflet-distortable-imageoverlay](https://github.com/ChrisLowe-Takor/react-leaflet-distortable-imageoverlay) projects
 
-[Live Demo](https://planmygarden.github.io/react-leaflet-rubbersheet/)
+It borrows extensively from both the [Leaflet.DistortableImage](https://github.com/publiclab/Leaflet.DistortableImage) and [react-leaflet-distortable-imageoverlay](https://github.com/ChrisLowe-Takor/react-leaflet-distortable-imageoverlay) projects
 
 ## Install
 
